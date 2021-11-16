@@ -13,8 +13,9 @@ Output       = ${subfile}.out
 Universe     = vanilla
 GetEnv       = True
 Request_cpus = 1
+Request_memory = 1G
 Notification = Always
-Requirements = machine =!= "kunpl07"
+Requirements = (machine != "kunpl-node03" && machine != "kunpl-node09")
 Notify_user  = simpson9794@korea.ac.kr
 Queue
 EOF
