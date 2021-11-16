@@ -24,7 +24,7 @@ MediumMagboltz* FieldMapBuilder::initGas()
         parMan->getParS("GAS_MEDIUM"));
     const std::string path = std::getenv("GARFIELD_INSTALL");
     fGas->LoadIonMobility(path + parMan->getParS("GAS_ION_MOBILITY"));
-    fGas->SetMaxElectronEnergy(200);
+    fGas->SetMaxElectronEnergy(2000);
     return fGas;
 }
 
@@ -58,9 +58,14 @@ ComponentConstant* FieldMapBuilder::buildDriftFieldMap()
 
 ComponentElmer* FieldMapBuilder::buildGemFieldMap(const bool print)
 {
+    if(fGas == nullptr)
+    {
+        printError("FieldMapBuilder", "buildGemFieldMap(const bool)", "fGas is a null pointer.");
+        return nullptr;
+    }
     auto parMan = ParManager::getInstance();
     string script = parMan->getParS("SCRIPT_NAME");
-    
+
     // get an absolute path to executable.
     char buffer[1024];
     ssize_t length = readlink("/proc/self/exe", buffer, sizeof(buffer)/sizeof(char));
@@ -91,7 +96,7 @@ ComponentConstant* FieldMapBuilder::buildMagneticField()
     auto parMan = ParManager::getInstance();
     if(fGas == nullptr)
     {
-        printError("FieldMapBuilder", "buildDriftFieldMap()", "fGas is a null pointer.");
+        printError("FieldMapBuilder", "buildMagneticField()", "fGas is a null pointer.");
         return nullptr;
     }
     const double tpcX = parMan->getParD("TPC_X");
